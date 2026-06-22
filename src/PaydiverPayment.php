@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Jomabee payment helper for SMM panels and other custom PHP apps — by Kodbee.
+ * Paydiver payment helper for SMM panels and other custom PHP apps — by Kodbee.
  *
  * Single-file, zero-dependency (cURL + JSON). Drop it into any PHP project and
  * `require` it — no Composer or namespace required. If your panel uses Composer,
- * prefer the `kodbee/jomabee-php` package instead.
+ * prefer the `kodbee/paydiver-php` package instead.
  *
  * @see https://kodbee.com
  */
-class JomabeePayment
+class PaydiverPayment
 {
     /** @var string */
     private $baseUrl;
@@ -59,14 +59,14 @@ class JomabeePayment
         if ($raw === false) {
             $err = curl_error($ch);
             curl_close($ch);
-            throw new RuntimeException('Jomabee request failed: ' . $err);
+            throw new RuntimeException('Paydiver request failed: ' . $err);
         }
         $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         $body = json_decode((string) $raw, true);
         if (! is_array($body) || $status >= 400 || (isset($body['success']) && $body['success'] === false)) {
-            $message = isset($body['error']['message']) ? $body['error']['message'] : 'Jomabee API error.';
+            $message = isset($body['error']['message']) ? $body['error']['message'] : 'Paydiver API error.';
             throw new RuntimeException($message);
         }
 

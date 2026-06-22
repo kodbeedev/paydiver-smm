@@ -4,12 +4,12 @@
  * Plain PHP test (no framework). Run: php tests/signature_test.php
  */
 
-require __DIR__ . '/../src/JomabeePayment.php';
+require __DIR__ . '/../src/PaydiverPayment.php';
 
 $secret = 'whsec_test';
-$j = new JomabeePayment('key', $secret, 'https://pay.kodbee.com');
+$j = new PaydiverPayment('key', $secret, 'https://pay.kodbee.com');
 
-$payload = ['event' => 'payment.verified', 'invoice_id' => 'JOMB-1', 'amount' => 500.0];
+$payload = ['event' => 'payment.verified', 'invoice_id' => 'PAYD-1', 'amount' => 500.0];
 $body = json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 $sig = hash_hmac('sha256', $body, $secret);
 
@@ -28,7 +28,7 @@ $check = function ($name, $cond) use (&$pass, &$fail) {
 $check('valid signature', $j->verifySignature($body, $sig) === true);
 $check('tampered body rejected', $j->verifySignature('{"amount":999}', $sig) === false);
 $check('empty signature rejected', $j->verifySignature($body, '') === false);
-$check('parseWebhook returns event', $j->parseWebhook($body, $sig)['invoice_id'] === 'JOMB-1');
+$check('parseWebhook returns event', $j->parseWebhook($body, $sig)['invoice_id'] === 'PAYD-1');
 
 $threw = false;
 try {

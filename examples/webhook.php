@@ -1,23 +1,23 @@
 <?php
 
 /**
- * Example: Jomabee webhook receiver that credits a panel user's balance.
+ * Example: Paydiver webhook receiver that credits a panel user's balance.
  * Set this file's URL as `callback_url` when creating the payment.
  */
 
-require __DIR__ . '/../src/JomabeePayment.php';
+require __DIR__ . '/../src/PaydiverPayment.php';
 
-$jomabee = new JomabeePayment(
-    getenv('JOMABEE_API_KEY') ?: 'your_api_key',
-    getenv('JOMABEE_SECRET_KEY') ?: 'your_secret_key',
-    getenv('JOMABEE_BASE_URL') ?: 'https://pay.kodbee.com'
+$paydiver = new PaydiverPayment(
+    getenv('PAYDIVER_API_KEY') ?: 'your_api_key',
+    getenv('PAYDIVER_SECRET_KEY') ?: 'your_secret_key',
+    getenv('PAYDIVER_BASE_URL') ?: 'https://pay.kodbee.com'
 );
 
 $raw = file_get_contents('php://input') ?: '';
-$signature = isset($_SERVER['HTTP_X_JOMABEE_SIGNATURE']) ? $_SERVER['HTTP_X_JOMABEE_SIGNATURE'] : '';
+$signature = isset($_SERVER['HTTP_X_PAYDIVER_SIGNATURE']) ? $_SERVER['HTTP_X_PAYDIVER_SIGNATURE'] : '';
 
 try {
-    $event = $jomabee->parseWebhook($raw, $signature);
+    $event = $paydiver->parseWebhook($raw, $signature);
 } catch (RuntimeException $e) {
     http_response_code(400);
     echo 'invalid';

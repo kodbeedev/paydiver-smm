@@ -1,29 +1,29 @@
-# Jomabee for SMM Panels
+# Paydiver for SMM Panels
 
-Drop-in PHP integration for the [Jomabee](https://kodbee.com) payment API by
+Drop-in PHP integration for the [Paydiver](https://kodbee.com) payment API by
 **Kodbee** — built for SMM panels and other custom PHP apps that don't use
 Composer. Single file, zero dependencies (cURL + JSON).
 
-> Using Composer? Prefer [`kodbee/jomabee-php`](https://github.com/kodbeedev/jomabee-php).
+> Using Composer? Prefer [`kodbee/paydiver-php`](https://github.com/kodbeedev/paydiver-php).
 
 ## Install
 
-Copy `src/JomabeePayment.php` into your project and `require` it.
+Copy `src/PaydiverPayment.php` into your project and `require` it.
 
 ```php
-require __DIR__ . '/JomabeePayment.php';
+require __DIR__ . '/PaydiverPayment.php';
 
-$jomabee = new JomabeePayment('API_KEY', 'SECRET_KEY', 'https://pay.kodbee.com');
+$paydiver = new PaydiverPayment('API_KEY', 'SECRET_KEY', 'https://pay.kodbee.com');
 ```
 
 ## Add Funds (deposit)
 
 ```php
-$payment = $jomabee->createPayment([
+$payment = $paydiver->createPayment([
     'amount'       => 100,
     'product_name' => 'Wallet top-up #'.$userId,
     'redirect_url' => 'https://your-panel.com/funds?status=done',
-    'callback_url' => 'https://your-panel.com/jomabee-webhook.php',
+    'callback_url' => 'https://your-panel.com/paydiver-webhook.php',
 ]);
 
 // store $payment['invoice_id'] -> $userId, then:
@@ -33,9 +33,9 @@ header('Location: '.$payment['payment_url']);
 ## Webhook
 
 ```php
-$event = $jomabee->parseWebhook(
+$event = $paydiver->parseWebhook(
     file_get_contents('php://input'),
-    $_SERVER['HTTP_X_JOMABEE_SIGNATURE'] ?? ''
+    $_SERVER['HTTP_X_PAYDIVER_SIGNATURE'] ?? ''
 ); // throws on invalid signature
 
 if ($event['event'] === 'payment.verified') {
